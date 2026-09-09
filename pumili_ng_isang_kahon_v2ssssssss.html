@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>May Nakita Ka Bang Bagay Para Sa'yo?</title>
+<style>
+*{box-sizing:border-box}
+:root{--yellow:#ffd21c;--dark:#071525}
+body{
+  margin:0; min-height:100vh; overflow-x:hidden;
+  font-family:Arial,Helvetica,sans-serif; color:#fff;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(24,47,78,.7),transparent 45%),
+    linear-gradient(135deg,#07101d,#101c2d 45%,#160f0e);
+}
+body:before{
+  content:""; position:fixed; inset:0; pointer-events:none;
+  background:radial-gradient(circle at 50% 60%,transparent 25%,rgba(0,0,0,.62) 100%);
+}
+.page{width:min(1100px,96vw);margin:auto;text-align:center;padding:32px 10px 42px}
+.hero{
+  max-width:980px;margin:0 auto 20px;padding:20px 18px 15px;
+  background:#061425e8;border-radius:28px;
+  transform:rotate(-1deg);
+  box-shadow:0 18px 50px #0008;
+}
+h1{
+  margin:0;font-size:clamp(31px,6vw,70px);line-height:.98;
+  font-weight:900;font-style:italic;
+  text-shadow:0 5px 0 #0008;
+}
+h1 span{display:block;color:var(--yellow);font-size:1.02em}
+.subtitle{font-size:clamp(17px,2.5vw,29px);font-weight:800;margin:25px auto 4px}
+.note{opacity:.78;font-size:14px;margin-top:7px}
+.boxes{
+  display:flex;justify-content:center;align-items:end;gap:clamp(8px,3vw,35px);
+  margin:42px auto 28px;perspective:1200px;
+}
+.box{
+  position:relative;width:clamp(105px,27vw,265px);height:clamp(145px,30vw,275px);
+  border:0;background:none;cursor:pointer;transition:.7s cubic-bezier(.2,.8,.2,1);
+  transform-style:preserve-3d;filter:drop-shadow(0 25px 18px #0008);
+}
+.box:hover{transform:translateY(-14px) rotateX(3deg)}
+.box.selected{transform:translateY(-25px) scale(1.16);z-index:20}
+.box.dim{opacity:.16;transform:scale(.72);filter:blur(1px);pointer-events:none}
+.box.hidden{opacity:0;transform:scale(.2) translateY(100px);pointer-events:none}
+.box .base{
+  position:absolute;left:5%;right:5%;bottom:2%;height:63%;
+  border-radius:9px 9px 15px 15px;
+  box-shadow:inset 0 0 0 2px #ffffff22,inset 20px 0 30px #fff1;
+}
+.box .lid{
+  position:absolute;left:1%;right:1%;top:25%;height:25%;z-index:4;
+  border-radius:8px 8px 12px 12px;transition:.7s;
+  box-shadow:0 12px 25px #0008,inset 0 0 0 2px #ffffff2b;
+}
+.box .ribbon-v{position:absolute;z-index:6;top:25%;bottom:2%;left:43%;width:14%;opacity:.95}
+.box .ribbon-h{position:absolute;z-index:7;left:1%;right:1%;top:33%;height:13%;opacity:.95}
+.box .bow{position:absolute;z-index:9;top:13%;left:50%;width:54px;height:34px;transform:translateX(-50%);transition:.7s}
+.bow:before,.bow:after{content:"";position:absolute;top:0;width:34px;height:25px;border-radius:90% 15% 90% 15%;background:inherit}
+.bow:before{right:25px;transform:rotate(25deg)}.bow:after{left:25px;transform:scaleX(-1) rotate(25deg)}
+.bow i{position:absolute;left:50%;top:7px;width:17px;height:20px;transform:translateX(-50%);border-radius:50%;background:inherit;z-index:2}
+.blue .base,.blue .lid{background:linear-gradient(145deg,#1688e9,#073b87)}
+.blue .ribbon-v,.blue .ribbon-h,.blue .bow{background:#f4bd35}
+.purple .base,.purple .lid{background:linear-gradient(145deg,#a53cff,#3d146e)}
+.purple .ribbon-v,.purple .ribbon-h,.purple .bow{background:#ffd66b}
+.black .base,.black .lid{background:linear-gradient(145deg,#343943,#080a0d)}
+.black .ribbon-v,.black .ribbon-h,.black .bow{background:#e82b32}
+.question{
+  position:absolute;z-index:10;left:50%;top:61%;transform:translate(-50%,-50%);
+  font-size:clamp(55px,9vw,105px);font-weight:900;color:#ffe26a;
+  text-shadow:0 5px 3px #000,0 0 20px #ffc40066;
+}
+.box.open .lid{transform:translateY(-85px) rotate(-7deg)}
+.box.open .bow{transform:translate(-50%,-35px) rotate(-8deg)}
+.box.open .question{opacity:0}
+.prize{
+  position:absolute;z-index:30;left:50%;top:52%;
+  width:min(250px,95%);padding:17px 12px;
+  transform:translate(-50%,-50%) scale(.2);opacity:0;pointer-events:none;
+  border-radius:18px;background:#0a1423f5;border:2px solid var(--yellow);
+  box-shadow:0 15px 50px #000d;transition:.65s .1s;
+}
+.box.open .prize{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
+.prize .emoji{font-size:48px}.prize h2{margin:4px 0;font-size:20px}
+.prize p{margin:5px 0 12px;font-size:12px;opacity:.78}
+.claim{
+  display:inline-block;text-decoration:none;color:#101722;background:var(--yellow);
+  padding:11px 18px;border-radius:24px;font-weight:900;font-size:14px;
+  box-shadow:0 5px 16px #0008;
+}
+.bottom{
+  display:inline-flex;align-items:center;justify-content:center;gap:14px;
+  margin-top:15px;padding:18px 42px;border-radius:50px;
+  background:linear-gradient(#ffdf35,#f6b600);color:#071525;
+  font-size:clamp(17px,3vw,27px);font-weight:900;
+  box-shadow:0 8px 30px #0009,inset 0 2px #fff8;
+}
+#status{min-height:25px;margin:15px 0;font-weight:bold}
+.confetti{position:fixed;width:8px;height:14px;z-index:100;pointer-events:none;animation:fall 1.2s ease-out forwards}
+@keyframes fall{to{transform:translate(var(--x),var(--y)) rotate(600deg);opacity:0}}
+@media(max-width:600px){
+ .page{padding-top:18px}.hero{padding:17px 10px}
+ .boxes{gap:2px;margin-top:28px}.prize{width:145px;padding:10px 5px}
+ .prize .emoji{font-size:32px}.prize h2{font-size:14px}.claim{font-size:11px;padding:8px 11px}
+ .bottom{padding:14px 22px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <section class="hero">
+    <h1>May nakita ka bang<span>bagay na para sa'yo?</span></h1>
+    <div class="subtitle">Pumili ng isang kahon at tingnan ang mga detalye!</div>
+    <div class="note">Pumili lamang ng isang kahon.</div>
+  </section>
+
+  <div class="boxes" id="boxes">
+    <button class="box blue" aria-label="Blue mystery box">
+      <span class="lid"></span><span class="base"></span>
+      <span class="ribbon-v"></span><span class="ribbon-h"></span><span class="bow"><i></i></span>
+      <span class="question">?</span><span class="prize"></span>
+    </button>
+
+    <button class="box purple" aria-label="Purple mystery box">
+      <span class="lid"></span><span class="base"></span>
+      <span class="ribbon-v"></span><span class="ribbon-h"></span><span class="bow"><i></i></span>
+      <span class="question">?</span><span class="prize"></span>
+    </button>
+
+    <button class="box black" aria-label="Black mystery box">
+      <span class="lid"></span><span class="base"></span>
+      <span class="ribbon-v"></span><span class="ribbon-h"></span><span class="bow"><i></i></span>
+      <span class="question">?</span><span class="prize"></span>
+    </button>
+  </div>
+
+  <div id="status" aria-live="polite">Pumili ng isang kahon 🎁</div>
+  <div class="bottom">PILIHIN AT TINGNAN ANG DETAILYE ➜</div>
+</main>
+
+<script>
+const TARGET_URL = "https://admain.leadseagle.shop/?utm_medium=3db76a8b5b76e37da5f804616a0ff7664813d99a&utm_campaign=target_MZ_0610d611";
+
+const prizes = [
+  {emoji:"📱", title:"iPhone 16", text:"Special Reward"},
+  {emoji:"🎧", title:"Wireless Headset", text:"Special Reward"},
+  {emoji:"💵", title:"$100 Cash", text:"Bonus Gift"}
+];
+
+// Shuffle so the three prizes are assigned differently on every fresh load.
+const shuffled = [...prizes].sort(() => Math.random() - 0.5);
+const boxes = [...document.querySelectorAll(".box")];
+let locked = false;
+
+function makeConfetti(el){
+  const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+  for(let i=0;i<34;i++){
+    const c=document.createElement("span"); c.className="confetti";
+    c.style.left=cx+"px"; c.style.top=cy+"px";
+    c.style.setProperty("--x",(Math.random()*440-220)+"px");
+    c.style.setProperty("--y",(Math.random()*420-210)+"px");
+    c.style.background=["#ffd21c","#fff","#55b9ff","#ff5b68","#a96cff"][i%5];
+    document.body.appendChild(c); setTimeout(()=>c.remove(),1300);
+  }
+}
+
+boxes.forEach((box,index)=>{
+  box.addEventListener("click",()=>{
+    if(locked)return;
+    locked=true;
+
+    boxes.forEach((b,i)=>{
+      if(i!==index)b.classList.add("dim");
+    });
+    box.classList.add("selected");
+    document.getElementById("status").textContent="Binubuksan ang kahon...";
+
+    setTimeout(()=>{
+      const prize=shuffled[index];
+      box.querySelector(".prize").innerHTML=`
+        <div class="emoji">${prize.emoji}</div>
+        <h2>${prize.title}</h2>
+        <p>${prize.text}</p>
+        <a class="claim" href="${TARGET_URL}" target="_blank" rel="noopener noreferrer">
+          TINGNAN ANG DETAILYE ➜
+        </a>`;
+      box.classList.add("open");
+      makeConfetti(box);
+      document.getElementById("status").textContent="Congratulations! 🎉";
+    },650);
+  });
+});
+</script>
+</body>
+</html>
